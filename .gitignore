@@ -1,0 +1,8 @@
+/.classpath
+/.project
+/.settings/*
+/bin/*
+/sample-output/*
+/target/*
+.DS_Store
+/bin/
