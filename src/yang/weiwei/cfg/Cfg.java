@@ -5,6 +5,7 @@ import java.io.File;
 public class Cfg
 {
 	public static String dataPath="sample-data"+File.separator;
+	public static String outputPath="sample-output"+File.separator;
 	public static String libPath="lib"+File.separator;
 	public static String dictPath="dict"+File.separator;
 }

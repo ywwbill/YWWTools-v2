@@ -7,8 +7,9 @@ import yang.weiwei.cfg.Cfg;
 public final class LDACfg
 {	
 	private static String dataPath=Cfg.dataPath+"lda"+File.separator;
-	private static String modelPath=dataPath+"model"+File.separator;
-	private static String synPath=dataPath+"synthetic"+File.separator;
+	private static String outputPath=Cfg.outputPath+"lda"+File.separator;
+	private static String modelPath=outputPath+"model"+File.separator;
+	private static String synPath=outputPath+"synthetic"+File.separator;
 	
 	public static int numTrainIters=20;
 	public static int numTestIters=20;

@@ -23,6 +23,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import org.ejml.simple.SimpleMatrix;
 
+/**
+ * Multilingual Topic Model
+ * @author Yang Weiwei
+ *
+ */
 public class MTM
 {	
 	public static final int TRAIN=0;
@@ -64,6 +69,11 @@ public class MTM
 	protected double[] logLikelihood;
 	protected double[] perplexity;
 	
+	/**
+	 * Read corpora
+	 * @param corpusFileNames Corpus file names of all languages
+	 * @throws IOException IOException
+	 */
 	public void readCorpus(String corpusFileNames[]) throws IOException
 	{
 		for (int lang=0; lang<param.numLangs; lang++)
@@ -106,6 +116,11 @@ public class MTM
 		}
 	}
 	
+	/**
+	 * Read word translation dictionary
+	 * @param associationFileName Word translation dictionary file name
+	 * @throws IOException IOException
+	 */
 	public void readWordAssociations(String associationFileName) throws IOException
 	{
 		BufferedReader br=new BufferedReader(new FileReader(associationFileName));
@@ -139,6 +154,9 @@ public class MTM
 		param.printBasicParam("\t");
 	}
 	
+	/**
+	 * Initialize MTM member variables
+	 */
 	public void initialize()
 	{
 		initDocVariables();
@@ -199,6 +217,11 @@ public class MTM
 		}
 	}
 	
+	/**
+	 * Sample for given number of iterations
+	 * @param numIters Number of iterations
+	 * @throws IOException IOException
+	 */
 	public void sample(int numIters) throws IOException
 	{
 		for (int iteration=1; iteration<=numIters; iteration++)
@@ -672,56 +695,112 @@ public class MTM
 		return 1;
 	}
 	
+	/**
+	 * Get document distribution over topics
+	 * @param lang Language ID
+	 * @return Document distribution over topics
+	 */
 	public double[][] getDocTopicDist(int lang)
 	{
 		return theta[lang].clone();
 	}
 	
+	/**
+	 * Get document distributions over topics
+	 * @return Document distributions over topics
+	 */
 	public double[][][] getDocTopicDist()
 	{
 		return theta.clone();
 	}
 	
+	/**
+	 * Get topic distribution over words
+	 * @param lang Language ID
+	 * @return Topic distribution over words
+	 */
 	public double[][] getTopicVocabDist(int lang)
 	{
 		return phi[lang].clone();
 	}
 	
+	/**
+	 * Get topic distributions over words
+	 * @return Topic distributions over words
+	 */
 	public double[][][] getTopicVocabDist()
 	{
 		return phi.clone();
 	}
 	
+	/**
+	 * Get number of documents
+	 * @param lang Language ID
+	 * @return Number of documents
+	 */
 	public int getNumDocs(int lang)
 	{
 		return numDocs[lang];
 	}
 	
+	/**
+	 * Get number of tokens in the corpus
+	 * @param lang Language ID
+	 * @return Number of tokens
+	 */
 	public int getNumWords(int lang)
 	{
 		return numWords[lang];
 	}
 	
+	/**
+	 * Get a specific document
+	 * @param lang Language ID
+	 * @param doc Document ID
+	 * @return Corresponding document object
+	 */
 	public MTMDoc getDoc(int lang, int doc)
 	{
 		return corpus.get(lang).get(doc);
 	}
 	
+	/**
+	 * Get a specific topic
+	 * @param lang Language ID
+	 * @param topic Topic number
+	 * @return Corresponding topic object
+	 */
 	public MTMTopic getTopic(int lang, int topic)
 	{
 		return topics[lang][topic];
 	}
 	
+	/**
+	 * Get log likelihood
+	 * @param lang Language ID
+	 * @return Log likelihood
+	 */
 	public double getLogLikelihood(int lang)
 	{
 		return logLikelihood[lang];
 	}
 	
+	/**
+	 * Get perplexity
+	 * @param lang Language ID
+	 * @return Perplexity
+	 */
 	public double getPerplexity(int lang)
 	{
 		return perplexity[lang];
 	}
 	
+	/**
+	 * Get topic link weights of two languages
+	 * @param lang1 Language ID 1
+	 * @param lang2 Language ID 2
+	 * @return The topic link weights between the two languages
+	 */
 	public double[][] getTopicLinkValue(int lang1, int lang2)
 	{
 		if (lang1==lang2) return null;
@@ -734,6 +813,11 @@ public class MTM
 		return rho[lang1][lang2].clone();
 	}
 	
+	/**
+	 * Get documents' number of tokens assigned to every topic
+	 * @param lang Language ID
+	 * @return Documents' number of tokens assigned to every topic
+	 */
 	public int[][] getDocTopicCounts(int lang)
 	{
 		int docTopicCounts[][]=new int[numDocs[lang]][param.numTopics[lang]];
@@ -747,6 +831,11 @@ public class MTM
 		return docTopicCounts;
 	}
 	
+	/**
+	 * Get tokens' topic assignments
+	 * @param lang Language ID
+	 * @return Tokens' topic assignments
+	 */
 	public int[][] getTokenTopicAssign(int lang)
 	{
 		int tokenTopicAssign[][]=new int[numDocs[lang]][];
@@ -761,6 +850,13 @@ public class MTM
 		return tokenTopicAssign;
 	}
 	
+	/**
+	 * Get a topic's top words (with highest number of assignments)
+	 * @param lang Language ID
+	 * @param topic Topic number
+	 * @param numTopWords Number of top words
+	 * @return Given topic's top words
+	 */
 	public String topWordsByFreq(int lang, int topic, int numTopWords)
 	{
 		String result="Language "+lang+" Topic "+topic+":";
@@ -778,6 +874,13 @@ public class MTM
 		return result;
 	}
 	
+	/**
+	 * Get a topic's top words (with highest weight)
+	 * @param lang Language ID
+	 * @param topic Topic number
+	 * @param numTopWords Number of top words
+	 * @return Given topic's top words
+	 */
 	public String topWordsByWeight(int lang, int topic, int numTopWords)
 	{
 		String result="Language "+lang+" Topic "+topic+":";
@@ -870,6 +973,12 @@ public class MTM
 		}
 	}
 	
+	/**
+	 * Write topics' top words to file
+	 * @param resultFileName Result file name
+	 * @param numTopWords Number of top words
+	 * @throws IOException IOException
+	 */
 	public void writeResult(String resultFileName, int numTopWords) throws IOException
 	{
 		BufferedWriter bw=new BufferedWriter(new FileWriter(resultFileName));
@@ -884,6 +993,11 @@ public class MTM
 		bw.close();
 	}
 	
+	/**
+	 * Write document distributions over topics to file
+	 * @param docTopicDistFileNames Distribution file names
+	 * @throws IOException IOException
+	 */
 	public void writeDocTopicDist(String docTopicDistFileNames[]) throws IOException
 	{
 		for (int lang=0; lang<param.numLangs; lang++)
@@ -892,6 +1006,12 @@ public class MTM
 		}
 	}
 	
+	/**
+	 * Write document distribution over topics to file
+	 * @param lang Language ID
+	 * @param docTopicDistFileName Distribution file name
+	 * @throws IOException IOException
+	 */
 	public void writeDocTopicDist(int lang, String docTopicDistFileName) throws IOException
 	{
 		BufferedWriter bw=new BufferedWriter(new FileWriter(docTopicDistFileName));
@@ -899,6 +1019,11 @@ public class MTM
 		bw.close();
 	}
 	
+	/**
+	 * Write documents' number of tokens assigned to topics to file
+	 * @param topicCountFileNames Documents' topic count file names
+	 * @throws IOException IOException
+	 */
 	public void writeDocTopicCounts(String topicCountFileNames[]) throws IOException
 	{
 		for (int lang=0; lang<param.numLangs; lang++)
@@ -907,6 +1032,12 @@ public class MTM
 		}
 	}
 	
+	/**
+	 * Write documents' number of tokens assigned to topics to file
+	 * @param lang Language ID
+	 * @param topicCountFileName Documents' topic count file name
+	 * @throws IOException IOException
+	 */
 	public void writeDocTopicCounts(int lang, String topicCountFileName) throws IOException
 	{
 		BufferedWriter bw=new BufferedWriter(new FileWriter(topicCountFileName));
@@ -914,6 +1045,11 @@ public class MTM
 		bw.close();
 	}
 	
+	/**
+	 * Write tokens' topic assignments to files
+	 * @param topicAssignFileNames Topic assignment file names
+	 * @throws IOException IOException
+	 */
 	public void writeTokenTopicAssign(String topicAssignFileNames[]) throws IOException
 	{
 		for (int lang=0; lang<param.numLangs; lang++)
@@ -922,6 +1058,12 @@ public class MTM
 		}
 	}
 	
+	/**
+	 * Write tokens' topic assignments to file
+	 * @param lang Language ID
+	 * @param topicAssignFileName Topic assignment file name
+	 * @throws IOException IOException
+	 */
 	public void writeTokenTopicAssign(int lang, String topicAssignFileName) throws IOException
 	{
 		BufferedWriter bw=new BufferedWriter(new FileWriter(topicAssignFileName));
@@ -929,6 +1071,11 @@ public class MTM
 		bw.close();
 	}
 	
+	/**
+	 * Write model to file
+	 * @param modelFileName Model file name
+	 * @throws IOException IOException
+	 */
 	public void writeModel(String modelFileName) throws IOException
 	{
 		BufferedWriter bw=new BufferedWriter(new FileWriter(modelFileName));
@@ -1042,6 +1189,10 @@ public class MTM
 		gson=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 	}
 	
+	/**
+	 * Initialize an MTM object for training
+	 * @param parameters Parameters
+	 */
 	public MTM(MTMParam parameters)
 	{
 		this.type=TRAIN;
@@ -1057,6 +1208,11 @@ public class MTM
 		}
 	}
 	
+	/**
+	 * Initialize an MTM object for test using a pre-trained MTM object
+	 * @param MTMTrain Pre-trained MTM object
+	 * @param parameters Parameters
+	 */
 	public MTM(MTM MTMTrain, MTMParam parameters)
 	{
 		this.type=TEST;
@@ -1065,6 +1221,12 @@ public class MTM
 		copyModel(MTMTrain);
 	}
 	
+	/**
+	 * Initialize an MTM object for test using a pre-trained MTM model in file
+	 * @param modelFileName Model file name
+	 * @param parameters Parameters
+	 * @throws IOException IOException
+	 */
 	public MTM(String modelFileName, MTMParam parameters) throws IOException
 	{
 		MTM MTMTrain=gson.fromJson(new FileReader(modelFileName), this.getClass());
@@ -1072,5 +1234,23 @@ public class MTM
 		this.param=parameters;
 		initVariables();
 		copyModel(MTMTrain);
+	}
+	
+	public static void main(String[] args) throws IOException
+	{
+		MTMParam param=new MTMParam(MTMCfg.vocabFileNames);
+		
+		MTM mtmTrain=new MTM(param);
+		mtmTrain.readCorpus(MTMCfg.trainCorporaFileNames);
+		mtmTrain.readWordAssociations(MTMCfg.dictFileName);
+		mtmTrain.initialize();
+		mtmTrain.sample(MTMCfg.numTrainIters);
+//		mtmTrain.writeModel(MTMCfg.modelFileName);
+		
+		MTM mtmTest=new MTM(mtmTrain, param);
+//		MTM mtmTrain=new MTM(MTMCfg.modelFileName, param);
+		mtmTest.readCorpus(MTMCfg.testCorporaFileNames);
+		mtmTest.initialize();
+		mtmTest.sample(MTMCfg.numTestIters);
 	}
 }

@@ -12,25 +12,39 @@ public class MTMParam
 	public static final int NONE=0,L1=1,L2=2,ENTROPY=3,IDENTICAL=4;
 	
 	//for topic model
+	/** Number of languages */
 	public int numLangs=2;
-	public double[] alpha=new double[] {0.1, 0.1};
+	/** Parameters of document-topic distribution's Dirichlet prior (default: 0.01) */
+	public double[] alpha=new double[] {0.01, 0.01};
+	/** Parameters of topic-word distribution's Dirichlet prior (default: 0.01) */
 	public double[] beta=new double[] {0.01, 0.01};
-	public int[] numTopics=new int[] {25, 25};
+	/** Numbers of topics (default: 10) */
+	public int[] numTopics=new int[] {10, 10};
+	/** Print log on console (default: true) */
 	public boolean verbose=true;
+	/** The word term frequency thresholds for the word translation pair to be included */
 	public int[] wordTfThreshold=new int[] {0, 0};
+	/** Number of top words in each topic when printing topics */
 	public int numTopWords=10;
 	
-	public double lambda=0.001;
+	/** The coefficient of regularization (default: 0.0) */
+	public double lambda=0.0;
+	/** Regularization option (default: 0): 0 - None, 1 - L1, 2 - L2, 3 - entropy, 4 - identity matrix */
 	public int reg=NONE;
+	/** Use TF-IDF weights for word translation pairs (default: false) */
 	public boolean tfidf=false;
 	public boolean optWeightNorm=false;
 	public boolean wordWeightNorm=false;
 	public boolean topicEntropy=false;
 	
+	/** Update alpha (default: false) */
 	public boolean updateAlpha=false;
+	/** Interval of updating alpha (default: 10) */
 	public int updateAlphaInterval=10;
 	
+	/** Vocabulary sizes */
 	public int[] numVocab=new int[numLangs];
+	/** Vocabulary for each language */
 	public MTMVocab[] vocab=new MTMVocab[numLangs];
 	
 	public void printBasicParam(String prefix)
