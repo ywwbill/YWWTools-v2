@@ -1072,6 +1072,27 @@ public class MTM
 	}
 	
 	/**
+	 * Write topic transformation matrices (i.e., `rho`) to file
+	 * @param topicTransMatricesFileName Topic transformation matrix file name
+	 * @throws IOException IOException
+	 */
+	public void writeTopicTransMatrices(String topicTransMatricesFileName) throws IOException
+	{
+		BufferedWriter bw=new BufferedWriter(new FileWriter(topicTransMatricesFileName));
+		for (int lang1=0; lang1<param.numLangs; lang1++)
+		{
+			for (int lang2=0; lang2<param.numLangs; lang2++)
+			{
+				if (lang1==lang2) continue;
+				bw.write("Rho["+lang1+"]["+lang2+"]:");
+				bw.newLine();
+				IOUtil.writeMatrix(bw, rho[lang1][lang2]);
+			}
+		}
+		bw.close();
+	}
+	
+	/**
 	 * Write model to file
 	 * @param modelFileName Model file name
 	 * @throws IOException IOException

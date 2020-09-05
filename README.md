@@ -420,6 +420,7 @@ trained_model=<model-file>
 	- `update=false`: Update alpha while sampling (default: false).
 	- `update_interval=<update-interval>`: Interval of updating alpha (default: 10). Must be a positive integer.
 	- `theta=<theta-files>`: Files for document distribution over topics. One file for each language. File names are separated by comma (,). Each line contains a document's topic distribution. Topic weights are separated by space.
+	- `rho=<rho-file>`: File for topic transformation matrices. Assuming there are $N$ languages, the file contains $N(N-1)$ matrices. Each matrix starts by a line of string `Rho[i][j]` where `i` and `j` indicate two languages. The following $K_i$ rows contains the topic transformation matrix from language `i` to language `j`, and each row has $K_j$ values separated by spaces, where $K_i$ and $K_j$ are the numbers of topics in languages `i` and `j` respectively.
 	- `output_topic=<topic-file>`: File for showing topics.
 	- `topic_count=<topic-count-file>`: Files for document-topic counts. One file for each language. File names are separated by comma (,).
 	- `top_word=<num-top-word>`: Number of words to give when showing topics (default: 10). Must be a positive integer.
@@ -872,6 +873,7 @@ Here are examples for running some algorithms in this package. For more informat
 		mtmTrain.writeDocTopicDist(thetaFileNames[]); // optional, write document-topic distribution to files
 		mtmTrain.writeResult("topic_file_name", 10); // optional, write top 10 words of each topic to file
 		mtmTrain.writeDocTopicCounts(topicCountFileNames[]) // optional, write document-topic counts to files
+		mtmTrain.writeTopicTransMatrices("rho_file_name"); // optional, write topic transformation matrices to file
 
 - Test code example
 

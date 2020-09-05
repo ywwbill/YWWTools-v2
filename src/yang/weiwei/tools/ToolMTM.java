@@ -33,6 +33,7 @@ public class ToolMTM extends ToolInterface
 	private String[] thetaFileName;
 	private String[] topicCountFileName;
 	private String topicFileName;
+	private String rhoFileName;
 	
 	public void parseCommand()
 	{
@@ -62,6 +63,7 @@ public class ToolMTM extends ToolInterface
 			topicCountFileName=props.getProperty("topic_count").split(",");
 		}
 		topicFileName=props.getProperty("output_topic");
+		rhoFileName=props.getProperty("rho");
 		
 		String[] seg;
 		if (numLangs>1)
@@ -291,6 +293,10 @@ public class ToolMTM extends ToolInterface
 			mtm.initialize();
 			mtm.sample(numIters);
 			mtm.writeModel(modelFileName);
+			if (rhoFileName!=null)
+			{
+				mtm.writeTopicTransMatrices(rhoFileName);
+			}
 		}
 		else
 		{
@@ -353,6 +359,7 @@ public class ToolMTM extends ToolInterface
 		println("\toutput_topic [optional]: File for showing topics.");
 		println("\ttop_word [optional]: Number of words to give when showing topics (default: 10).");
 		println("\ttopic_count [optional]: Files for document-topic counts, separated by commas (,).");
+		println("\trho [optional, available in training only]: File for topic weight transformation matrices.");
 	}
 	
 	public ToolMTM(String cfgFileName) throws IOException
